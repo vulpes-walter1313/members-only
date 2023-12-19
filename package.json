@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "start": "DEBUG=members-only:* node ./bin/www",
-    "dev": "DEBUG=members-only:* nodemon ./bin/www",
-    "pretty": "prettier . --write"
+    "dev": "DEBUG=members-only:* concurrently \"nodemon ./bin/www \" \"npm run tailwind:css\"",
+    "pretty": "prettier . --write",
+    "tailwind:css": "postcss -w public/stylesheets/tailwind.css -o public/stylesheets/style.css"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -23,7 +24,12 @@
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
     "nodemon": "^3.0.2",
-    "prettier": "^3.1.1"
+    "postcss": "^8.4.32",
+    "postcss-cli": "^11.0.0",
+    "prettier": "^3.1.1",
+    "tailwindcss": "^3.4.0"
   }
 }
