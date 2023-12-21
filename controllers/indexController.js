@@ -11,7 +11,7 @@ module.exports.signup_post = (req, res) => {
 };
 
 module.exports.login_page = (req, res) => {
-  res.send("'/login' POST not implemented");
+  res.render("login", { title: "VIP Login" });
 };
 
 module.exports.login_post = (req, res) => {
