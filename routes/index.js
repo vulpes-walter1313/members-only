@@ -3,9 +3,7 @@ const indexController = require("../controllers/indexController");
 const router = express.Router();
 
 /* GET home page. */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "VIP Message Board" });
-});
+router.get("/", indexController.index_get);
 
 // GET signup page
 router.get("/signup", indexController.signup_get);
@@ -13,32 +11,18 @@ router.get("/signup", indexController.signup_get);
 // POST signup
 router.post("/signup", indexController.signup_post);
 
-router.get("/login", (req, res) => {
-  res.send("'/login' GET not implemented");
-});
+router.get("/login", indexController.login_page);
 
-router.post("/login", (req, res) => {
-  res.send("'/login' POST not implemented");
-});
+router.post("/login", indexController.login_post);
 
-router.get("/membership", (req, res) => {
-  res.send("/membership GET route not implemented");
-});
+router.get("/membership", indexController.membership_page);
 
-router.post("/membership", (req, res) => {
-  res.send("/membership POST route not implemented");
-});
+router.post("/membership", indexController.membership_post);
 
-router.get("/welcome-new-member", (req, res) => {
-  res.send("/welcome-new-member GET route not implemented");
-});
+router.get("/welcome-new-member", indexController.welcome_member_page);
 
-router.get("/become-an-admin", (req, res) => {
-  res.send("/become-an-admin GET route not implemented");
-});
+router.get("/become-an-admin", indexController.become_admin_page);
 
-router.post("/become-an-admin", (req, res) => {
-  res.send("/become-an-admin POST route not implemented");
-});
+router.post("/become-an-admin", indexController.become_admin_post);
 
 module.exports = router;
