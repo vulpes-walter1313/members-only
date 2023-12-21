@@ -11,6 +11,7 @@ const connection = require("./config/database");
 const passport = require("./config/passport");
 
 const indexRouter = require("./routes/index");
+const postRouter = require("./routes/postRoutes");
 const usersRouter = require("./routes/users");
 
 // mongoSessionStore
@@ -55,6 +56,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
+app.use("/post", postRouter);
 app.use("/users", usersRouter);
 
 // catch 404 and forward to error handler
