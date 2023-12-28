@@ -1,9 +1,7 @@
 const mongoose = require("mongoose");
 
-const connection = mongoose.createConnection(process.env.MONGODB, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(process.env.MONGODB);
+const connection = mongoose.connection;
 
 connection.on("error", (err) => {
   console.log(err);
