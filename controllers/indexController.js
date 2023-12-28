@@ -76,7 +76,7 @@ module.exports.membership_post = [
       if (data.memberpassword === process.env.MEMBERSHIP_SECRET) {
         req.user.member = true;
         await req.user.save();
-        res.redirect("/");
+        res.redirect("/welcome-new-member");
       } else {
         res.render("membership", {
           title: "Become a member",
@@ -91,7 +91,7 @@ module.exports.membership_post = [
 
 // welcome new member page
 module.exports.welcome_member_page = (req, res) => {
-  res.send("/welcome-new-member GET route not implemented");
+  res.render("welcome", { title: `Welcome, ${req.user.fullName}!`, user: req.user });
 };
 
 // become an admin routes
