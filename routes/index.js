@@ -23,6 +23,8 @@ router.post("/membership", indexController.membership_post);
 
 router.get("/welcome-new-member", indexController.welcome_member_page);
 
+router.get("/welcome-new-admin", indexController.welcome_admin_page);
+
 router.get("/become-an-admin", indexController.become_admin_page);
 
 router.post("/become-an-admin", indexController.become_admin_post);

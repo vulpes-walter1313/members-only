@@ -2,6 +2,7 @@ const { body, matchedData, validationResult } = require("express-validator");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
+const { isAuth, isMember, isAdmin } = require("../lib/authMiddleware");
 
 module.exports.index_get = (req, res) => {
   res.render("index", { title: "VIP Message Board", user: req.user });
@@ -90,14 +91,56 @@ module.exports.membership_post = [
 ];
 
 // welcome new member page
-module.exports.welcome_member_page = (req, res) => {
-  res.render("welcome", { title: `Welcome, ${req.user.fullName}!`, user: req.user });
-};
+module.exports.welcome_member_page = [
+  isAuth,
+  (req, res) => {
+    res.render("welcome", {
+      title: `Welcome, ${req.user.fullName}!`,
+      user: req.user,
+    });
+  },
+];
+
+module.exports.welcome_admin_page = [
+  isAuth,
+  isAdmin,
+  (req, res) => {
+    res.render("welcomeadmin", {
+      title: `Welcome admin, ${req.user.fullName}!`,
+      user: req.user,
+    });
+  },
+];
 
 // become an admin routes
-module.exports.become_admin_page = (req, res) => {
-  res.send("/become-an-admin GET route not implemented");
-};
-module.exports.become_admin_post = (req, res) => {
-  res.send("/become-an-admin POST route not implemented");
-};
+module.exports.become_admin_page = [
+  isAuth,
+  (req, res) => {
+    res.render("becomeadmin", { title: "Become An Admin", user: req.user });
+  },
+];
+
+module.exports.become_admin_post = [
+  isAuth,
+  body("adminpassword").notEmpty(),
+  async (req, res) => {
+    const validRes = validationResult(req);
+
+    if (validRes.isEmpty()) {
+      const data = matchedData(req);
+      console.log(req.user);
+      if (data.adminpassword === process.env.ADMIN_SECRET) {
+        req.user.admin = true;
+        await req.user.save();
+        res.redirect("/welcome-new-admin");
+      } else {
+        res.render("becomeadmin", {
+          title: "Become An Admin",
+          wrongPassword: true,
+        });
+      }
+    } else {
+      res.send({ errors: validRes.array() });
+    }
+  },
+];
