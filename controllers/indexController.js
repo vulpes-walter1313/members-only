@@ -43,14 +43,16 @@ module.exports.signup_post = [
   },
 ];
 
-module.exports.logout_get = (req, res, next) => {
+module.exports.logout_get = [
+  isAuth,
+  (req, res, next) => {
   req.logout((err) => {
     if (err) {
       return next(err);
     }
     res.redirect("/");
   });
-};
+}];
 
 module.exports.login_page = (req, res) => {
   res.render("login", { title: "VIP Login" });
@@ -63,10 +65,14 @@ module.exports.login_post = [
 ];
 
 // membership routes
-module.exports.membership_page = (req, res) => {
+module.exports.membership_page = [
+  isAuth,
+  (req, res) => {
   res.render("membership", { title: "Become a member" });
-};
+}];
+
 module.exports.membership_post = [
+  isAuth,
   body("memberpassword").notEmpty(),
   async (req, res) => {
     const validRes = validationResult(req);
@@ -115,6 +121,7 @@ module.exports.welcome_admin_page = [
 // become an admin routes
 module.exports.become_admin_page = [
   isAuth,
+  isMember,
   (req, res) => {
     res.render("becomeadmin", { title: "Become An Admin", user: req.user });
   },
@@ -122,6 +129,7 @@ module.exports.become_admin_page = [
 
 module.exports.become_admin_post = [
   isAuth,
+  isMember,
   body("adminpassword").notEmpty(),
   async (req, res) => {
     const validRes = validationResult(req);
