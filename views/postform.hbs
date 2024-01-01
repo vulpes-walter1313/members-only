@@ -1,0 +1,52 @@
+<main class="bg-slate-950 text-slate-50 px-4 min-h-screen">
+  <div class="max-w-5xl mx-auto flex flex-col items-center gap-6 py-20">
+    <h1 class="text-5xl font-bold max-w-md mx-auto text-center">What&apos;s your
+      story?</h1>
+    {{#if errors}}
+      <div class="flex flex-row gap-4 max-w-5xl mx-auto">
+        {{#each errors}}
+          <div class="text-slate-800 bg-red-400 py-4 px-2 w-52 rounded-md">
+            <p>{{msg}}</p>
+            <p>{{field}}</p>
+            <p>{{path}}</p>
+          </div>
+        {{/each}}
+      </div>
+    {{/if}}
+    <form
+      method="post"
+      class="bg-slate-800 p-4 rounded-md flex flex-col gap-4 w-96"
+    >
+      <div class="flex flex-col gap-2">
+        <label for="title" class="text-lg font-medium max-w-80">Title:</label>
+        {{#if postTitle}}
+          <input
+            type="text"
+            id="title"
+            name="title"
+            class="rounded-md py-2 px-4 text-slate-900"
+            value="{{postTitle}}"
+          />
+        {{else}}
+          <input
+            type="text"
+            id="title"
+            name="title"
+            class="rounded-md py-2 px-4 text-slate-900"
+          />
+        {{/if}}
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="storybody" class="text-lg font-medium max-w-80">Write your
+          story:</label>
+        <textarea
+          id="storybody"
+          name="storybody"
+          class="rounded-md py-2 px-4 text-slate-900 h-52"
+        ></textarea>
+      </div>
+      <button class="bg-slate-50 text-slate-950 py-2 px-4 rounded-md">Publish
+        Post</button>
+    </form>
+  </div>
+</main>

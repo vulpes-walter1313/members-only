@@ -1,10 +1,41 @@
-module.exports.create_page = (req, res) => {
-  res.send("post create page is not yet implemented");
-};
+const { isAuth } = require("../lib/authMiddleware");
+const { body, matchedData, validationResult } = require("express-validator");
+const Post = require("../models/Post");
 
-module.exports.create_page_post = (req, res) => {
-  res.send("post Create POST route not implemented yet");
-};
+module.exports.create_page = [
+  isAuth,
+  (req, res) => {
+    res.render("postform", {
+      title: "Create A Post!",
+    });
+  },
+];
+
+module.exports.create_page_post = [
+  isAuth,
+  body("title").notEmpty().escape(),
+  body("storybody").notEmpty().escape(),
+  async (req, res) => {
+    const result = validationResult(req);
+    const data = matchedData(req);
+    console.log(result.array());
+
+    if (result.isEmpty()) {
+      const newPost = new Post({
+        title: data.title,
+        body: data.storybody,
+        author: req.user,
+      });
+      await newPost.save();
+      res.redirect(`/post/${newPost.id}`);
+    } else {
+      res.render("postform", {
+        title: "Create a post!",
+        errors: result.array(),
+      });
+    }
+  },
+];
 
 module.exports.post_page = (req, res) => {
   res.send(`post:${req.params.postId} controller not implemented`);
