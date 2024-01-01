@@ -46,13 +46,14 @@ module.exports.signup_post = [
 module.exports.logout_get = [
   isAuth,
   (req, res, next) => {
-  req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
-    res.redirect("/");
-  });
-}];
+    req.logout((err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect("/");
+    });
+  },
+];
 
 module.exports.login_page = (req, res) => {
   res.render("login", { title: "VIP Login" });
@@ -68,8 +69,9 @@ module.exports.login_post = [
 module.exports.membership_page = [
   isAuth,
   (req, res) => {
-  res.render("membership", { title: "Become a member" });
-}];
+    res.render("membership", { title: "Become a member" });
+  },
+];
 
 module.exports.membership_post = [
   isAuth,
