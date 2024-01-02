@@ -1,0 +1,57 @@
+<main class="bg-slate-950 text-slate-50 px-4 min-h-screen">
+  <div class="max-w-5xl mx-auto flex flex-col items-center gap-6 py-20">
+    {{#if errors}}
+      <div class="flex flex-row gap-4 max-w-5xl mx-auto">
+        {{#each errors}}
+          <div class="text-slate-800 bg-red-400 py-4 px-2 w-52 rounded-md">
+            <p>{{msg}}</p>
+            <p>{{field}}</p>
+            <p>{{path}}</p>
+          </div>
+        {{/each}}
+      </div>
+    {{/if}}
+    <div class="bg-slate-800 text-slate-50 px-6 py-4 rounded-md">
+      <div class="max-w-lg">
+        <div class="flex flex-col gap-1 mb-6">
+          {{#if isMember}}
+            <p class="font-medium text-base">{{post.author.fullName}}</p>
+          {{else}}
+            <p>Anonymous</p>
+          {{/if}}
+          <div class="text-xs">
+            <p>Posted on: {{post.createdFormatted}}</p>
+            <p>Updated on: {{post.updatedFormatted}}</p>
+          </div>
+        </div>
+        <div>
+          <h1 class="text-3xl mb-2">{{post.title}}</h1>
+          <p class="whitespace-pre-line">{{post.body}}</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      {{#if isAuthor}}
+        <div class="flex gap-4 justify-center">
+          <a
+            class="text-slate-900 bg-slate-100 py-2 px-6 rounded-md"
+            href="/posts/{{post.id}}/update"
+          >Edit Post</a>
+          <a
+            class="text-slate-50 bg-red-600 py-2 px-6 rounded-md"
+            href="/posts/{{post.id}}/delete"
+          >Delete Post</a>
+        </div>
+      {{/if}}
+      {{#if isAdmin}}
+        <div>
+          <p>Admin Tools</p>
+          <a
+            class="text-slate-50 bg-red-600 py-2 px-6 rounded-md"
+            href="/post/{{post.id}}/delete"
+          >Delete Post</a>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</main>

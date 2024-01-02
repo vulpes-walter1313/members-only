@@ -1,6 +1,7 @@
 const { isAuth } = require("../lib/authMiddleware");
 const { body, matchedData, validationResult } = require("express-validator");
 const Post = require("../models/Post");
+const asyncHandler = require("express-async-handler");
 
 module.exports.create_page = [
   isAuth,
@@ -37,9 +38,24 @@ module.exports.create_page_post = [
   },
 ];
 
-module.exports.post_page = (req, res) => {
-  res.send(`post:${req.params.postId} controller not implemented`);
-};
+module.exports.post_page = asyncHandler(async (req, res, next) => {
+  // res.send(`post:${req.params.postId} controller not implemented`);
+  const post = await Post.findById(req.params.postId).populate("author").exec();
+  console.log(post);
+  if (req.user) {
+    const isViewerMember = req.user.member;
+    const isViewerAdmin = req.user.admin;
+    const isViewerAuthor = req.user.id === post.author.id;
+    res.render("post", {
+      title: `${post.title} | VIP`,
+      user: req.user,
+      post: post,
+      isMember: isViewerMember,
+      isAdmin: isViewerAdmin,
+      isAuthor: isViewerAuthor,
+    });
+  }
+});
 
 module.exports.post_delete_get = (req, res) => {
   res.send("post delete not yet implemented");
