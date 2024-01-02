@@ -62,12 +62,12 @@ module.exports.login_page = (req, res) => {
 module.exports.login_post = [
   body("username").isEmail().escape(),
   body("password").notEmpty(),
-  (req,res,next) => {
+  (req, res, next) => {
     const result = validationResult(req);
     if (result.isEmpty()) {
       next();
     } else {
-      res.render("login", {title: "login", errors: result.array()})
+      res.render("login", { title: "login", errors: result.array() });
     }
   },
   passport.authenticate("local", { successRedirect: "/", failureRedirect: "" }),
