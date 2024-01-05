@@ -1,8 +1,74 @@
-<main class="bg-slate-950 text-slate-50 p-4">
-  <h1>{{title}}</h1>
+<main class="bg-slate-950 text-slate-50 p-4 min-h-screen">
   {{#if user}}
-    <p>Welcome back to {{title}}, {{user.fullName}}</p>
+    <h1 class="text-3xl font-bold text-center pt-8 pb-6">Welcome back to
+      {{title}},
+      {{user.fullName}}</h1>
   {{else}}
-    <p>Welcome to {{title}}</p>
+    <h1 class="text-3xl font-bold text-center pt-8 pb-6">Welcome to
+      {{title}}</h1>
+  {{/if}}
+  {{#if user}}
+    <div class="max-w-7xl grid grid-cols-10 mx-auto">
+      <div
+        class="bg-slate-800 p-6 col-span-2 h-min flex flex-col gap-4 rounded-md"
+      >
+        <p class="text-xl font-medium">Go To Shortcuts</p>
+        <ul class="">
+          <li><a href="/membership">Become A Member</a></li>
+          <li><a href="/become-an-admin">Become An Admin</a></li>
+        </ul>
+        <a
+          class="text-slate-900 bg-slate-100 py-2 px-6 rounded-md"
+          href="/post/create"
+        >Create Post</a>
+      </div>
+      <div class="col-start-4 col-span-4 flex flex-col gap-8">
+        {{#each posts}}
+          <div class="bg-slate-800 text-slate-50 px-6 py-4 rounded-md">
+            <div class="max-w-lg">
+              <div class="flex flex-col gap-1 mb-6">
+                {{#if ../isMember}}
+                  <p class="font-medium text-base">{{author.fullName}}</p>
+                {{else}}
+                  <p>Anonymous</p>
+                {{/if}}
+                <div class="text-xs">
+                  <p>Posted on: {{createdFormatted}}</p>
+                  <p>Updated on: {{updatedFormatted}}</p>
+                </div>
+              </div>
+              <div>
+                <a href="/post/{{id}}"><h1 class="text-3xl mb-2">{{{title}}}</h1></a>
+                <p class="whitespace-pre-line pb-6">{{{shortbody}}}</p>
+                <a href="/post/{{id}}">Read More</a>
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  {{else}}
+    <div>
+      <div class="flex flex-col gap-8 max-w-xl mx-auto">
+        {{#each posts}}
+          <div class="bg-slate-800 text-slate-50 px-6 py-4 rounded-md">
+            <div class="">
+              <div class="flex flex-col gap-1 mb-6">
+                <p class="font-medium text-base">Anonymous</p>
+                <div class="text-xs">
+                  <p>Posted on: {{createdFormatted}}</p>
+                  <p>Updated on: {{updatedFormatted}}</p>
+                </div>
+              </div>
+              <div>
+                <a href="/post/{{id}}"><h1 class="text-3xl mb-2">{{{title}}}</h1></a>
+                <p class="whitespace-pre-line pb-6">{{{shortbody}}}</p>
+                <a href="/post/{{id}}">Read More</a>
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
   {{/if}}
 </main>

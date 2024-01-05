@@ -20,6 +20,11 @@ postSchema.virtual("updatedFormatted").get(function () {
   return DateTime.fromJSDate(this.updatedAt).toLocaleString(DateTime.DATE_MED);
 });
 
+// virtual to get a smaller amound of the body
+postSchema.virtual("shortbody").get(function () {
+  return this.body.split(" ").slice(0, 50).join(" ") + "...";
+});
+
 const Post = mongoose.model("Post", postSchema);
 
 module.exports = Post;

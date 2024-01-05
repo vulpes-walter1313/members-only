@@ -1,12 +1,32 @@
 const { body, matchedData, validationResult } = require("express-validator");
+const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const { isAuth, isMember, isAdmin } = require("../lib/authMiddleware");
+const Post = require("../models/Post");
 
-module.exports.index_get = (req, res) => {
-  res.render("index", { title: "VIP Message Board", user: req.user });
-};
+module.exports.index_get = asyncHandler(async (req, res) => {
+  const posts = await Post.find({}, null, { limit: 10 })
+    .populate("author")
+    .exec();
+  if (req.user) {
+    const isViewerMember = req.user.member;
+    res.render("index", {
+      title: "VIP Message Board",
+      user: req.user,
+      posts: posts,
+      isMember: isViewerMember,
+    });
+  } else {
+    res.render("index", {
+      title: "VIP Message Board",
+      user: req.user,
+      posts: posts,
+      isMember: false,
+    });
+  }
+});
 
 module.exports.signup_get = (req, res) => {
   res.render("signup", { title: "Sign Up" });
