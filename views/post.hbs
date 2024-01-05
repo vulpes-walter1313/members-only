@@ -25,8 +25,8 @@
           </div>
         </div>
         <div>
-          <h1 class="text-3xl mb-2">{{post.title}}</h1>
-          <p class="whitespace-pre-line">{{post.body}}</p>
+          <h1 class="text-3xl mb-2">{{{post.title}}}</h1>
+          <p class="whitespace-pre-line">{{{post.body}}}</p>
         </div>
       </div>
     </div>
@@ -42,8 +42,7 @@
             href="/posts/{{post.id}}/delete"
           >Delete Post</a>
         </div>
-      {{/if}}
-      {{#if isAdmin}}
+      {{else if isAdmin}}
         <div>
           <p>Admin Tools</p>
           <a
