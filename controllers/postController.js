@@ -54,6 +54,15 @@ module.exports.post_page = asyncHandler(async (req, res, next) => {
       isAdmin: isViewerAdmin,
       isAuthor: isViewerAuthor,
     });
+  } else {
+    res.render("post", {
+      title: `${post.title} | VIP`,
+      user: req.user,
+      post: post,
+      isMember: false,
+      isAdmin: false,
+      isAuthor: false,
+    });
   }
 });
 
