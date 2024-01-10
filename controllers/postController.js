@@ -16,7 +16,7 @@ module.exports.create_page_post = [
   isAuth,
   body("title").notEmpty().escape(),
   body("storybody").notEmpty().escape(),
-  async (req, res) => {
+  asyncHandler(async (req, res) => {
     const result = validationResult(req);
     const data = matchedData(req);
     console.log(result.array());
@@ -35,7 +35,7 @@ module.exports.create_page_post = [
         errors: result.array(),
       });
     }
-  },
+  }),
 ];
 
 module.exports.post_page = asyncHandler(async (req, res, next) => {
@@ -74,12 +74,64 @@ module.exports.post_delete_post = (req, res) => {
   res.send("Post delete POST request not implemented");
 };
 
-module.exports.post_update_get = (req, res) => {
-  res.send(`Post update page not implemeneted. Post ID: ${req.params.postId}`);
-};
+module.exports.post_update_get = [
+  isAuth,
+  asyncHandler(async (req, res, next) => {
+    const post = await Post.findById(req.params.postId)
+      .populate("author")
+      .exec();
+    if (post) {
+      if (req.user.id !== post.author.id) {
+        const error = new Error("You're not allowed to view this resource");
+        error.status = 403;
+        return next(error);
+      }
+      res.render("postform", {
+        title: "Update your post",
+        postTitle: post.title,
+        postBody: post.body,
+      });
+    } else {
+      const error = new Error("that post doesn't exist!");
+      error.status = 404;
+      return next(error);
+    }
+  }),
+];
 
-module.exports.post_update_post = (req, res) => {
-  res.send(
-    `Post update POST route not implemeneted. Post ID: ${req.params.postId}`,
-  );
-};
+module.exports.post_update_post = [
+  isAuth,
+  body("title").notEmpty().escape(),
+  body("storybody").notEmpty().escape(),
+  asyncHandler(async (req, res, next) => {
+    const result = validationResult(req);
+    const data = matchedData(req);
+    const post = await Post.findById(req.params.postId).populate("author").exec();
+    console.log(result.array());
+
+    if (post) {
+      if (req.user.id !== post.author.id) {
+        const error = new Error("You're not allowed to view this resource");
+        error.status = 403;
+        return next(error);
+      }
+      if (result.isEmpty()) {
+        post.title = data.title;
+        post.body = data.storybody;
+        await post.save();
+        res.redirect(`/post/${post.id}`);
+      } else {
+        res.render("postform", {
+          title: "Create a post!",
+          postTitle: post.title,
+          postBody: post.body,
+          errors: result.array(),
+        });
+      }
+    } else {
+      const error = new Error("That post doesn't exist");
+      error.status = 500;
+      res.send(err);
+    }
+  }),
+];
