@@ -66,13 +66,59 @@ module.exports.post_page = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports.post_delete_get = (req, res) => {
-  res.send("post delete not yet implemented");
-};
+module.exports.post_delete_get = [
+  isAuth,
+  asyncHandler(async (req, res, next) => {
+    const post = await Post.findById(req.params.postId)
+      .populate("author")
+      .exec();
+    if (post) {
+      const isAuthor = req.user.id === post.author.id;
+      const isAdmin = req.user.admin;
+      if (isAuthor || isAdmin) {
+        res.render("delete", {
+          title: `Deleting post: ${post.id}`,
+          post: post,
+        });
+      } else {
+        const error = new Error("Not authorized to view resource");
+        error.status = 403;
+        next(error);
+      }
+    } else {
+      const error = new Error("post doesn't exist");
+      error.status = 404;
+      next(error);
+    }
+  }),
+];
 
-module.exports.post_delete_post = (req, res) => {
-  res.send("Post delete POST request not implemented");
-};
+module.exports.post_delete_post = [
+  isAuth,
+  body("postid").isMongoId(),
+  asyncHandler(async (req, res, next) => {
+    const result = validationResult(req);
+    const data = matchedData(req);
+
+    if (result.isEmpty()) {
+      const post = await Post.findById(data.postid).populate("author").exec();
+      const isAuthor = req.user.id === post.author.id;
+      const isAdmin = req.user.admin;
+      if (isAdmin || isAuthor) {
+        await Post.findByIdAndDelete(data.postid).exec();
+        res.redirect("/");
+      } else {
+        const error = new Error("You're not authorized to perform this action");
+        error.status = 403;
+        return next(error);
+      }
+    } else {
+      const error = new Error("validation error");
+      error.status = 500;
+      return next(error);
+    }
+  }),
+];
 
 module.exports.post_update_get = [
   isAuth,
@@ -106,7 +152,9 @@ module.exports.post_update_post = [
   asyncHandler(async (req, res, next) => {
     const result = validationResult(req);
     const data = matchedData(req);
-    const post = await Post.findById(req.params.postId).populate("author").exec();
+    const post = await Post.findById(req.params.postId)
+      .populate("author")
+      .exec();
     console.log(result.array());
 
     if (post) {
