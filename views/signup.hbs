@@ -2,6 +2,17 @@
   <div class="max-w-5xl mx-auto flex flex-col items-center gap-6 py-20">
     <h1 class="text-5xl font-bold max-w-md mx-auto text-center">Sign Up to Our
       VIP Message Board</h1>
+    {{#if errors}}
+      <div class="flex flex-row gap-4 max-w-5xl mx-auto">
+        {{#each errors}}
+          <div class="text-slate-800 bg-red-400 py-4 px-2 w-52 rounded-md">
+            <p>{{msg}}</p>
+            <p>{{field}}</p>
+            <p>{{path}}</p>
+          </div>
+        {{/each}}
+      </div>
+    {{/if}}
     <form
       method="post"
       class="bg-slate-800 p-4 rounded-md flex flex-col gap-4 w-80"
@@ -45,6 +56,18 @@
           type="password"
           id="password"
           name="password"
+          class="rounded-md py-2 px-4 text-slate-900"
+        />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label
+          for="passwordconfirmation"
+          class="text-lg font-medium max-w-80"
+        >Confirm Password:</label>
+        <input
+          type="password"
+          id="passwordconfirmation"
+          name="passwordconfirmation"
           class="rounded-md py-2 px-4 text-slate-900"
         />
       </div>

@@ -36,8 +36,19 @@ module.exports.signup_get = (req, res) => {
 module.exports.signup_post = [
   body("firstname").notEmpty().escape(),
   body("lastname").notEmpty().escape(),
-  body("username").isEmail().escape(),
+  body("username")
+    .isEmail()
+    .escape()
+    .custom(async (value) => {
+      const user = await User.findOne({ username: value }).exec();
+      if (user) {
+        throw new Error("User already exists");
+      }
+    }),
   body("password").notEmpty(),
+  body("passwordconfirmation").custom((value, { req }) => {
+    return value === req.body.password;
+  }),
   async (req, res, next) => {
     const validRes = validationResult(req);
     if (validRes.isEmpty()) {
@@ -59,7 +70,10 @@ module.exports.signup_post = [
         return next(err);
       }
     } else {
-      res.send({ errors: validRes.array() });
+      res.render("signup", {
+        title: "Sign up for our VIP club",
+        errors: validRes.array(),
+      });
     }
   },
 ];
@@ -91,7 +105,10 @@ module.exports.login_post = [
       res.render("login", { title: "login", errors: result.array() });
     }
   },
-  passport.authenticate("local", { successRedirect: "/", failureRedirect: "" }),
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+  }),
 ];
 
 // membership routes
