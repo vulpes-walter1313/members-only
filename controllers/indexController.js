@@ -64,7 +64,6 @@ module.exports.signup_post = [
           admin: false,
         });
         await newUser.save();
-        console.log(newUser);
         res.redirect("/login");
       } catch (err) {
         return next(err);
@@ -127,7 +126,6 @@ module.exports.membership_post = [
 
     if (validRes.isEmpty()) {
       const data = matchedData(req);
-      console.log(req.user);
       if (data.memberpassword === process.env.MEMBERSHIP_SECRET) {
         req.user.member = true;
         await req.user.save();
@@ -184,7 +182,6 @@ module.exports.become_admin_post = [
 
     if (validRes.isEmpty()) {
       const data = matchedData(req);
-      console.log(req.user);
       if (data.adminpassword === process.env.ADMIN_SECRET) {
         req.user.admin = true;
         await req.user.save();

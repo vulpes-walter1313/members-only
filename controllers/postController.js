@@ -19,7 +19,6 @@ module.exports.create_page_post = [
   asyncHandler(async (req, res) => {
     const result = validationResult(req);
     const data = matchedData(req);
-    console.log(result.array());
 
     if (result.isEmpty()) {
       const newPost = new Post({
@@ -41,7 +40,6 @@ module.exports.create_page_post = [
 module.exports.post_page = asyncHandler(async (req, res, next) => {
   // res.send(`post:${req.params.postId} controller not implemented`);
   const post = await Post.findById(req.params.postId).populate("author").exec();
-  console.log(post);
   if (req.user) {
     const isViewerMember = req.user.member;
     const isViewerAdmin = req.user.admin;
@@ -155,7 +153,6 @@ module.exports.post_update_post = [
     const post = await Post.findById(req.params.postId)
       .populate("author")
       .exec();
-    console.log(result.array());
 
     if (post) {
       if (req.user.id !== post.author.id) {
